@@ -38,3 +38,27 @@ void inverse(const Number a[], Number out[], const unsigned int lgn)
     }
 }
 ```
+
+pointer version:
+```cpp
+inline void updateInverse(const ConstArrayPtr &a, const Number old[], Number dest[], const unsigned int n)
+{
+    convolution(
+        a,
+        ConstArrayPtr{old, n >> 1},
+        ArrayPtr{dest, n << 1},
+        [](Number a, Number b) { return b * (2 - a * b); });
+}
+void inverse(const ConstArrayPtr a, const ArrayPtr dest)
+{
+    Number *const pDest = dest.ptr;
+    pDest[0] = inverse(a.ptr[0]);
+    if (dest.size == 1)
+        return;
+    const unsigned int n = 1u << ceilLg[dest.size], lim = std::max(2u, 1u << ceilLg[a.size]);
+    for (unsigned int i = 2; i < lim; i <<= 1)
+        updateInverse(ConstArrayPtr{a.ptr, i}, pDest, pDest, i);
+    for (unsigned int i = lim; i <= n; i <<= 1)
+        updateInverse(a, pDest, pDest, i);
+}
+```
