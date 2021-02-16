@@ -7,53 +7,52 @@
 ## Multiply
 
 ``` cpp
-unsigned int k; // number of row
-struct Vector
-{
-    inline unsigned long long& operator[](const size_t ind) { return val[ind]; }
-    inline const unsigned long long operator[](const size_t ind) const { return val[ind]; }
-    unsigned long long val[maxk + 1] = {};
+unsigned int k;  // number of row
+struct Vector {
+  inline unsigned long long& operator[](const size_t ind) { return val[ind]; }
+  inline const unsigned long long operator[](const size_t ind) const
+  {
+    return val[ind];
+  }
+  unsigned long long val[maxk + 1] = {};
 };
-struct Matrix
-{
-    inline Vector& operator[](const size_t ind) { return val[ind]; }
-    inline const Vector& operator[](const size_t ind) const { return val[ind]; }
-    void unit()
-    {
-        for (unsigned int i = 0; i < k; ++i)
-            val[i][i] = 1;
-    }
+struct Matrix {
+  inline Vector& operator[](const size_t ind) { return val[ind]; }
+  inline const Vector& operator[](const size_t ind) const { return val[ind]; }
+  void unit()
+  {
+    for (unsigned int i = 0; i < k; ++i)
+      val[i][i] = 1;
+  }
 
-    Vector val[maxk + 1];
+  Vector val[maxk + 1];
 };
 Vector operator*(const Matrix& m, const Vector& v)
 {
-    Vector ret;
-    for (unsigned int i = 0; i < k; ++i)
-        for (unsigned int j = 0; j < k; ++j)
-            ret[j] = ret[j] + m[i][j] * v[i];
-    return ret;
+  Vector ret;
+  for (unsigned int i = 0; i < k; ++i)
+    for (unsigned int j = 0; j < k; ++j)
+      ret[j] = ret[j] + m[i][j] * v[i];
+  return ret;
 }
 Matrix operator*(const Matrix& m, const Matrix& r)
 {
-    Matrix ret;
-    for (unsigned int i = 0; i < k; ++i)
-        ret[i] = m * r[i];
-    return ret;
+  Matrix ret;
+  for (unsigned int i = 0; i < k; ++i)
+    ret[i] = m * r[i];
+  return ret;
 }
 Matrix operator^(Matrix m, unsigned long long e)
 {
-    Matrix ret;
-    ret.unit();
-    for (unsigned long long i = 1; e; i <<= 1)
-    {
-        if (e & i)
-        {
-            ret = ret * m;
-            e ^= i;
-        }
-        m = m * m;
+  Matrix ret;
+  ret.unit();
+  for (unsigned long long i = 1; e; i <<= 1) {
+    if (e & i) {
+      ret = ret * m;
+      e ^= i;
     }
-    return ret;
+    m = m * m;
+  }
+  return ret;
 }
 ```

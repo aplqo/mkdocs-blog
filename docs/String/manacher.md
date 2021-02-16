@@ -14,41 +14,35 @@ unsigned int rad[(maxn + 10) * 2];
 
 void manacher(const char str[], unsigned int len)
 {
-    unsigned int r = 0, c = 0;
-    rad[0] = -1;
-    for (unsigned int i = 0; i < len; ++i)
-    {
-        unsigned int j = 0;
-        if (i < r && rad[2 * c - i] + i - 1 < r)
-        {
-            rad[i] = rad[2 * c - i];
-            continue;
-        }
-        else if (i < r)
-        {
-            j = r - i;
-            rad[i] = r - i;
-        }
-        for (; i + j < len; ++j)
-            if (str[i + j] == str[i - j])
-            {
-                r = i + j;
-                ++rad[i];
-            }
-            else
-                break;
-        c = i;
+  unsigned int r = 0, c = 0;
+  rad[0] = -1;
+  for (unsigned int i = 0; i < len; ++i) {
+    unsigned int j = 0;
+    if (i < r && rad[2 * c - i] + i - 1 < r) {
+      rad[i] = rad[2 * c - i];
+      continue;
     }
+    else if (i < r) {
+      j = r - i;
+      rad[i] = r - i;
+    }
+    for (; i + j < len; ++j)
+      if (str[i + j] == str[i - j]) {
+        r = i + j;
+        ++rad[i];
+      }
+      else
+        break;
+    c = i;
+  }
 }
 void read(char str[], unsigned int& len)
 {
-    len = 1;
-    while (cin)
-    {
-        cin >> str[len];
-        if (cin.fail())
-            break;
-        len += 2;
-    }
+  len = 1;
+  while (cin) {
+    cin >> str[len];
+    if (cin.fail()) break;
+    len += 2;
+  }
 }
 ```

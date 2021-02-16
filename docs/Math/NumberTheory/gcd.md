@@ -3,16 +3,15 @@
 ## Euclidean Algorithm
 
 ``` cpp
-unsigned int gcd(unsigned int a, unsigned int b) // a > b
+unsigned int gcd(unsigned int a, unsigned int b)  // a > b
 {
-    unsigned int r = a % b;
-    while (r)
-    {
-        a = b;
-        b = r;
-        r = a % b;
-    }
-    return b;
+  unsigned int r = a % b;
+  while (r) {
+    a = b;
+    b = r;
+    r = a % b;
+  }
+  return b;
 }
 ```
 
@@ -72,17 +71,16 @@ typedef long long num_t;
 
 num_t exgcd(num_t a, num_t b, num_t& x, num_t& y)
 {
-    if (b == 0)
-    {
-        x = 1;
-        y = 0;
-        return a;
-    }
-    num_t g = exgcd(b, a % b, x, y);
-    num_t t = x;
-    x = y;
-    y = t - (a / b) * y;
-    return g;
+  if (b == 0) {
+    x = 1;
+    y = 0;
+    return a;
+  }
+  num_t g = exgcd(b, a % b, x, y);
+  num_t t = x;
+  x = y;
+  y = t - (a / b) * y;
+  return g;
 }
 ```
 
@@ -92,23 +90,16 @@ num_t exgcd(num_t a, num_t b, num_t& x, num_t& y)
 typedef int num_t;
 
 template <num_t a, num_t b>
-class inverse
-{
-public:
-    enum : num_t
-    {
-        X = inverse<b, a % b>::Y,
-        Y = inverse<b, a % b>::X - (a / b) * inverse<b, a % b>::Y
-    };
+class inverse {
+ public:
+  enum : num_t {
+    X = inverse<b, a % b>::Y,
+    Y = inverse<b, a % b>::X - (a / b) * inverse<b, a % b>::Y
+  };
 };
 template <num_t a>
-class inverse<a, 0>
-{
-public:
-    enum
-    {
-        X = 1,
-        Y = 0
-    };
+class inverse<a, 0> {
+ public:
+  enum { X = 1, Y = 0 };
 };
 ```

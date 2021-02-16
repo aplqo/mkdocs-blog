@@ -21,17 +21,17 @@ hash_t po[maxn + 10], has[maxn + 10];
 
 inline void getPow(size_t n)
 {
-    po[0] = 1;
-    for (size_t i = 1; i <= n; ++i)
-        po[i] = po[i - 1] * base;
+  po[0] = 1;
+  for (size_t i = 1; i <= n; ++i)
+    po[i] = po[i - 1] * base;
 }
 inline void getHash(const char* str, size_t len)
 {
-    for (size_t i = 1; i <= len; ++i)
-        has[i] = has[i - 1] * base + str[i] - 'a';
+  for (size_t i = 1; i <= len; ++i)
+    has[i] = has[i - 1] * base + str[i] - 'a';
 }
 inline hash_t getSub(unsigned int beg, size_t len)
 {
-    return has[beg - 1 + len] - has[beg - 1] * po[len];
+  return has[beg - 1 + len] - has[beg - 1] * po[len];
 }
 ```

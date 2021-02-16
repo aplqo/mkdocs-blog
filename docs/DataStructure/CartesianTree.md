@@ -8,27 +8,23 @@
 以序列中元素编号作为 $k$ 建立。
 
 ``` cpp
-struct node
-{
-    unsigned int val;
-    unsigned int lc = 0, rc = 0;
+struct node {
+  unsigned int val;
+  unsigned int lc = 0, rc = 0;
 } nodes[maxn + 1];
 
 void buildTree(const unsigned int n)
 {
-    static unsigned int stk[maxn + 1], *top = stk;
-    *(top++) = 1;
-    for (unsigned int i = 2; i <= n; ++i)
-    {
-        unsigned int* ptr = top;
-        while (ptr > stk && nodes[*(ptr - 1)].val > nodes[i].val)
-            --ptr;
-        if (ptr > stk)
-            nodes[*(ptr - 1)].rc = i;
-        if (ptr < top)
-            nodes[i].lc = *ptr;
-        top = ptr;
-        *(top++) = i;
-    }
+  static unsigned int stk[maxn + 1], *top = stk;
+  *(top++) = 1;
+  for (unsigned int i = 2; i <= n; ++i) {
+    unsigned int* ptr = top;
+    while (ptr > stk && nodes[*(ptr - 1)].val > nodes[i].val)
+      --ptr;
+    if (ptr > stk) nodes[*(ptr - 1)].rc = i;
+    if (ptr < top) nodes[i].lc = *ptr;
+    top = ptr;
+    *(top++) = i;
+  }
 }
 ```

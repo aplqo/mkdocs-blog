@@ -21,24 +21,22 @@ $g(1)s(i)=\sum_{i=1}^{n}(f*g)(i)-\sum_{i=2}^{n}g(i)s(\lfloor \frac{n}{i} \rfloor
 // @returns (mu,phi)
 static pair<long long, unsigned long long> dujiao(const unsigned int n)
 {
-    static unordered_map<unsigned int, unsigned long long> memPhi;
-    static unordered_map<unsigned int, long long> memMu;
-    if (n <= block)
-        return make_pair(mu[n], phi[n]);
-    if (const auto it = memPhi.find(n); it != memPhi.end())
-        return make_pair(memMu.at(n), it->second);
-    long long m = 1;
-    unsigned long long p = n * static_cast<unsigned long long>(n + 1) >> 1;
-    for (unsigned int i = 2; i <= n;)
-    {
-        const unsigned int cv = n / i, nxt = n / cv + 1;
-        const auto [nm, np] = dujiao(cv);
-        m -= nm * (nxt - i);
-        p -= np * (nxt - i);
-        i = nxt;
-    }
-    memPhi[n] = p;
-    memMu[n] = m;
-    return make_pair(m, p);
+  static unordered_map<unsigned int, unsigned long long> memPhi;
+  static unordered_map<unsigned int, long long> memMu;
+  if (n <= block) return make_pair(mu[n], phi[n]);
+  if (const auto it = memPhi.find(n); it != memPhi.end())
+    return make_pair(memMu.at(n), it->second);
+  long long m = 1;
+  unsigned long long p = n * static_cast<unsigned long long>(n + 1) >> 1;
+  for (unsigned int i = 2; i <= n;) {
+    const unsigned int cv = n / i, nxt = n / cv + 1;
+    const auto [nm, np] = dujiao(cv);
+    m -= nm * (nxt - i);
+    p -= np * (nxt - i);
+    i = nxt;
+  }
+  memPhi[n] = p;
+  memMu[n] = m;
+  return make_pair(m, p);
 }
 ```

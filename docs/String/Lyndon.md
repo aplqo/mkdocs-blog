@@ -5,28 +5,26 @@ Lyndon 分解：串$S$的 Lyndon 分解记为$S=w_1w_2w_3\dots w_k$ ，其中所
 ## duval algorithm
 
 ```cpp
-vector<unsigned int> duval(const char str[], const size_t len) // return right endpoints
+vector<unsigned int> duval(const char str[],
+                           const size_t len)  // return right endpoints
 {
-    vector<unsigned int> ret;
-    for (unsigned int i = 0; i < len;)
-    {
-        unsigned int ps2 = i, ps3 = i + 1;
-        while (ps3 < len && str[ps2] <= str[ps3])
-        {
-            if (str[ps2] == str[ps3])
-                ++ps2;
-            else
-                ps2 = i;
-            ++ps3;
-        }
-        const unsigned int stp = ps3 - ps2;
-        while (i <= ps2)
-        {
-            ret.push_back(i + stp);
-            i += stp;
-        }
+  vector<unsigned int> ret;
+  for (unsigned int i = 0; i < len;) {
+    unsigned int ps2 = i, ps3 = i + 1;
+    while (ps3 < len && str[ps2] <= str[ps3]) {
+      if (str[ps2] == str[ps3])
+        ++ps2;
+      else
+        ps2 = i;
+      ++ps3;
     }
-    return ret;
+    const unsigned int stp = ps3 - ps2;
+    while (i <= ps2) {
+      ret.push_back(i + stp);
+      i += stp;
+    }
+  }
+  return ret;
 }
 ```
 

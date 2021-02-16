@@ -5,10 +5,9 @@
 ``` cpp
 const int maxn = 1000;
 
-struct edge
-{
-    unsigned int to;
-    edge* pre = nullptr;
+struct edge {
+  unsigned int to;
+  edge* pre = nullptr;
 } ed[maxn * maxn + 10];
 edge* head[maxn + 10];
 bool col[maxn + 10];
@@ -16,18 +15,16 @@ unsigned int vis[maxn + 10];
 
 bool dfs(const unsigned int x, const unsigned int sta)
 {
-    vis[x] = sta;
-    for (edge* i = head[x]; i; i = i->pre)
-    {
-        if (vis[i->to] && col[i->to] == col[x])
-            return false;
-        else if (vis[i->to])
-            continue;
-        col[i->to] = !col[x];
-        if (!dfs(i->to, sta))
-            return false;
-    }
-    return true;
+  vis[x] = sta;
+  for (edge* i = head[x]; i; i = i->pre) {
+    if (vis[i->to] && col[i->to] == col[x])
+      return false;
+    else if (vis[i->to])
+      continue;
+    col[i->to] = !col[x];
+    if (!dfs(i->to, sta)) return false;
+  }
+  return true;
 }
 ```
 
@@ -40,10 +37,9 @@ bool dfs(const unsigned int x, const unsigned int sta)
 ``` cpp
 const int maxe = maxn * maxn * 2, maxv = maxn * 2;
 
-struct edge
-{
-    unsigned int to;
-    edge* pre = nullptr;
+struct edge {
+  unsigned int to;
+  edge* pre = nullptr;
 } ed[maxe * 2 + 10];
 edge* head[maxv + 10];
 unsigned int mat[maxv + 10];
@@ -51,28 +47,23 @@ bool vis[maxv + 10];
 
 bool dfs(const unsigned int x)
 {
-    for (edge* i = head[x]; i; i = i->pre)
-    {
-        const unsigned int to = i->to;
-        if (vis[to])
-            continue;
-        vis[to] = true;
-        if (!mat[to] || dfs(mat[to]))
-        {
-            mat[to] = x;
-            return true;
-        }
+  for (edge* i = head[x]; i; i = i->pre) {
+    const unsigned int to = i->to;
+    if (vis[to]) continue;
+    vis[to] = true;
+    if (!mat[to] || dfs(mat[to])) {
+      mat[to] = x;
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
 /*in main function */
 unsigned int num = 0;
-for (unsigned int i = 1; i <= m; ++i)
-{
-    if (dfs(i))
-        ++num;
-    fill(vis, vis + n + m + 1, false);
+for (unsigned int i = 1; i <= m; ++i) {
+  if (dfs(i)) ++num;
+  fill(vis, vis + n + m + 1, false);
 }
 ```
 

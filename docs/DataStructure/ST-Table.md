@@ -14,22 +14,23 @@ num lg[maxn];
 
 num getLog(int x)
 {
-    if (lg[x])
-        return lg[x];
-    return x > 1 ? lg[x] = getLog(x >> 1) + 1 : 0;
+  if (lg[x]) return lg[x];
+  return x > 1 ? lg[x] = getLog(x >> 1) + 1 : 0;
 }
 inline void init(num dat[maxn], int len)
 {
-    for (int i = 0; i < len; ++i)
-        table[i][0] = dat[i];
-    for (num j = 1; j <= getLog(n); ++j)
-        for (int i = 0; i + (1 << j) <= n; ++i)
-            table[i][j] = max(table[i][j - 1], table[i + (1 << j - 1)][j - 1]); // i + 1 <<j - 1 = (i + 1)<<(j -1 )
+  for (int i = 0; i < len; ++i)
+    table[i][0] = dat[i];
+  for (num j = 1; j <= getLog(n); ++j)
+    for (int i = 0; i + (1 << j) <= n; ++i)
+      table[i][j] = max(
+          table[i][j - 1],
+          table[i + (1 << j - 1)][j - 1]);  // i + 1 <<j - 1 = (i + 1)<<(j -1 )
 }
 num query(int l, int r)
 {
-    num d = getLog(r - l + 1);
-    return max(table[l][d], table[r - (1 << d) + 1][d]);
+  num d = getLog(r - l + 1);
+  return max(table[l][d], table[r - (1 << d) + 1][d]);
 }
 ```
 

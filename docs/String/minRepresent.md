@@ -7,23 +7,21 @@
 ```cpp
 unsigned int minRepresent(unsigned int str[], const unsigned int len)
 {
-    copy(str, str + len, str + len);
-    unsigned int p1 = 0, p2 = 1, l = 0;
-    while (p1 < len && p2 < len && l < len)
-    {
-        if (str[p1 + l] == str[p2 + l])
-            ++l;
-        else
-        {
-            if (str[p1 + l] > str[p2 + l])
-                p1 += l + 1;
-            else
-                p2 += l + 1;
-            p1 += p1 == p2;
-            l = 0;
-        }
+  copy(str, str + len, str + len);
+  unsigned int p1 = 0, p2 = 1, l = 0;
+  while (p1 < len && p2 < len && l < len) {
+    if (str[p1 + l] == str[p2 + l])
+      ++l;
+    else {
+      if (str[p1 + l] > str[p2 + l])
+        p1 += l + 1;
+      else
+        p2 += l + 1;
+      p1 += p1 == p2;
+      l = 0;
     }
-    return min(p1, p2);
+  }
+  return min(p1, p2);
 }
 ```
 

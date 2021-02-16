@@ -9,16 +9,15 @@ unsigned int primes[maxn + 10], mindiv[maxn + 10], *pc = primes;
 
 inline void euler(unsigned int n)
 {
-    for (unsigned int i = 2; i <= n; ++i)
-    {
-        if (!mindiv[i])
-        {
-            mindiv[i] = i;
-            *(pc++) = i;
-        }
-        for (unsigned int* j = primes; j < pc && *j <= mindiv[i] && *j * i <= n; ++j)
-            mindiv[*j * i] = *j;
+  for (unsigned int i = 2; i <= n; ++i) {
+    if (!mindiv[i]) {
+      mindiv[i] = i;
+      *(pc++) = i;
     }
+    for (unsigned int* j = primes; j < pc && *j <= mindiv[i] && *j * i <= n;
+         ++j)
+      mindiv[*j * i] = *j;
+  }
 }
 ```
 
@@ -42,35 +41,30 @@ inline void euler(unsigned int n)
 ``` cpp
 inline pair<unsigned int, unsigned long long> lowbit(unsigned long long n)
 {
-    unsigned int ret = 0;
-    while (!(n & 0x01))
-    {
-        ++ret;
-        n >>= 1;
-    }
-    return make_pair(ret, n);
+  unsigned int ret = 0;
+  while (!(n & 0x01)) {
+    ++ret;
+    n >>= 1;
+  }
+  return make_pair(ret, n);
 }
-bool millerRabin(const unsigned long long n) // return true if n is prime.
+bool millerRabin(const unsigned long long n)  // return true if n is prime.
 {
-    static constexpr unsigned long long testA[] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37 };
-    const auto [r, d] = lowbit(n - 1);
-    for (const unsigned long long a : testA)
-    {
-        if (a > n - 2)
-            break;
-        unsigned long long x = quickPow(a, d, n);
-        if (x == 1 || x == n - 1)
-            continue;
-        for (unsigned int i = 1; i < r; ++i)
-        {
-            x = multiply(x, x, n);
-            if (x == n - 1)
-                goto End;
-        }
-        return false;
-    End:;
+  static constexpr unsigned long long testA[] = {2,  3,  5,  7,  11, 13,
+                                                 17, 19, 23, 29, 31, 37};
+  const auto [r, d] = lowbit(n - 1);
+  for (const unsigned long long a : testA) {
+    if (a > n - 2) break;
+    unsigned long long x = quickPow(a, d, n);
+    if (x == 1 || x == n - 1) continue;
+    for (unsigned int i = 1; i < r; ++i) {
+      x = multiply(x, x, n);
+      if (x == n - 1) goto End;
     }
-    return true;
+    return false;
+  End:;
+  }
+  return true;
 }
 ```
 
@@ -79,35 +73,31 @@ bool millerRabin(const unsigned long long n) // return true if n is prime.
 ``` cpp
 inline unsigned long long getRandom(const unsigned int n)
 {
-    uniform_int_distribution<unsigned long long> dis(1, n);
-    return dis(rnd);
+  uniform_int_distribution<unsigned long long> dis(1, n);
+  return dis(rnd);
 }
 unsigned long long pollardRho(const unsigned long long n)
 {
-    static const auto f = [](const unsigned long long x, const unsigned int c, const unsigned long long m) {
-        return (multiply(x, x, m) + c) % m;
-    };
-    const unsigned long long c = getRandom(n - 1);
-    unsigned long long x = getRandom(n - 1), y = x;
-    for (unsigned int i = 1; i; i <<= 1)
-    {
-        unsigned long long acc = 1;
-        for (unsigned int j = 0; j < i; ++j)
-        {
-            y = f(y, c, n);
-            acc = multiply(acc, (x > y ? x - y : y - x), n);
-            if ((j & 0x7fu) == 0)
-            {
-                const unsigned long long g = gcd(acc, n);
-                if (g > 1)
-                    return g;
-            }
-        }
+  static const auto f = [](const unsigned long long x, const unsigned int c,
+                           const unsigned long long m) {
+    return (multiply(x, x, m) + c) % m;
+  };
+  const unsigned long long c = getRandom(n - 1);
+  unsigned long long x = getRandom(n - 1), y = x;
+  for (unsigned int i = 1; i; i <<= 1) {
+    unsigned long long acc = 1;
+    for (unsigned int j = 0; j < i; ++j) {
+      y = f(y, c, n);
+      acc = multiply(acc, (x > y ? x - y : y - x), n);
+      if ((j & 0x7fu) == 0) {
         const unsigned long long g = gcd(acc, n);
-        if (g > 1)
-            return g;
-        x = y;
+        if (g > 1) return g;
+      }
     }
-    return 1;
+    const unsigned long long g = gcd(acc, n);
+    if (g > 1) return g;
+    x = y;
+  }
+  return 1;
 }
 ```
