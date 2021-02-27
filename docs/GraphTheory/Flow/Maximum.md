@@ -4,15 +4,14 @@
 
 ``` cpp
 struct Edge {
-  unsigned int from, to, id;
+  int from, to, id;
   long long cap, flw;
   Edge* pre;
 } ed[maxm * 2 + 1];
 Edge *head[maxn + 1], *par[maxn + 1], *cur[maxn + 1];
 unsigned int dep[maxn + 1], cnt[maxn + 1];
 
-void addEdge(const unsigned int from, const unsigned int to,
-             const long long cap)
+void addEdge(const int from, const int to, const long long cap)
 {
   static Edge* cur = ed;
   cur->from = from;
@@ -25,15 +24,15 @@ void addEdge(const unsigned int from, const unsigned int to,
   ++cur;
 }
 
-void bfs(const unsigned int t)
+void bfs(const int t)
 {
   static bool vis[maxn + 1];
-  queue<unsigned int> q;
+  queue<int> q;
   q.push(t);
   dep[t] = 0;
   vis[t] = true;
   while (!q.empty()) {
-    const unsigned int cur = q.front();
+    const int cur = q.front();
     q.pop();
     for (Edge* i = head[cur]; i; i = i->pre) {
       const Edge& r = ed[i->id ^ 1];
@@ -45,10 +44,10 @@ void bfs(const unsigned int t)
     }
   }
 }
-long long augment(const unsigned int s, const unsigned int t)
+long long augment(const int s, const int t)
 {
   long long ret = LLONG_MAX;
-  unsigned int x = t;
+  int x = t;
   while (x != s) {
     ret = min(ret, par[x]->cap - par[x]->flw);
     x = par[x]->from;
@@ -61,14 +60,14 @@ long long augment(const unsigned int s, const unsigned int t)
   }
   return ret;
 }
-long long isap(const unsigned int s, const unsigned int t, const unsigned int n)
+long long isap(const int s, const int t, const int n)
 {
   bfs(t);
-  for (unsigned int i = 1; i <= n; ++i)
+  for (int i = 1; i <= n; ++i)
     ++cnt[dep[i]];
   copy(head, head + 1 + n, cur);
   long long ret = 0;
-  unsigned int x = s;
+  int x = s;
   while (dep[s] < n) {
     if (x == t) {
       ret += augment(s, t);
@@ -84,7 +83,7 @@ long long isap(const unsigned int s, const unsigned int t, const unsigned int n)
         break;
       }
     if (!adv) {
-      unsigned int miv = n;
+      int miv = n;
       for (Edge* i = head[x]; i; i = i->pre)
         if (i->cap > i->flw) miv = min(miv, dep[i->to] + 1);
       --cnt[dep[x]];
@@ -104,50 +103,49 @@ long long isap(const unsigned int s, const unsigned int t, const unsigned int n)
 ```cpp
 typedef int Flow;
 struct Edge {
-  unsigned int from, to;
+  int from, to;
   mutable Flow flow;
   union {
-    unsigned int id;
+    int id;
     const Edge* rev;
   };
 };
 struct Vertex {
   std::vector<Edge> edge;
   const Edge *cur, *begin, *end;
-  unsigned int h;
+  int h;
   Flow exceed;
   bool inHeap;
 
   void init();
   void relabel();
-  void push(const unsigned int source, const unsigned int sink);
+  void push(const int source, const int sink);
 
  private:
-  void pushRange(const unsigned int source, const unsigned int sink,
-                 const Edge* beg, const Edge* end);
+  void pushRange(const int source, const int sink, const Edge* beg,
+                 const Edge* end);
 } vertex[maxn + 10];
 struct VertexLess {
-  inline bool operator()(const unsigned int a, const unsigned int b) const
+  inline bool operator()(const int a, const int b) const
   {
     return vertex[a].h < vertex[b].h;
   }
 };
-std::priority_queue<unsigned int, std::vector<unsigned int>, VertexLess> heap;
+std::priority_queue<int, std::vector<int>, VertexLess> heap;
 
-inline void addEdge(const unsigned int from, const unsigned int to,
-                    const Flow flow)
+inline void addEdge(const int from, const int to, const Flow flow)
 {
   vertex[from].edge.push_back(Edge{from, to, flow, {vertex[to].edge.size()}});
   vertex[to].edge.push_back(Edge{to, from, 0, {vertex[from].edge.size() - 1}});
 }
-bool bfs(const unsigned int s, const unsigned int t)
+bool bfs(const int s, const int t)
 {
   static bool vis[maxn + 10];
-  std::queue<unsigned int> q;
+  std::queue<int> q;
   vis[t] = true;
   q.push(t);
   while (!q.empty()) {
-    const unsigned int cur = q.front();
+    const int cur = q.front();
     q.pop();
     for (const Edge& i : vertex[cur].edge)
       if (i.rev->flow && !vis[i.to]) {
@@ -160,16 +158,16 @@ bool bfs(const unsigned int s, const unsigned int t)
 }
 void Vertex::relabel()
 {
-  unsigned int mn = UINT_MAX;
+  int mn = INT_MAX;
   for (const Edge& i : edge)
     if (i.flow) mn = std::min(mn, vertex[i.to].h);
-  if (mn != UINT_MAX) h = mn + 1;
+  if (mn != INT_MAX) h = mn + 1;
 }
 template <bool ignCheck>
-inline void pushEdge(const Edge* e, const Flow delt, const unsigned int source,
-                     const unsigned int sink)
+inline void pushEdge(const Edge* e, const Flow delt, const int source,
+                     const int sink)
 {
-  const unsigned int to = e->to;
+  const int to = e->to;
   e->flow -= delt;
   e->rev->flow += delt;
   vertex[e->from].exceed -= delt;
@@ -179,8 +177,7 @@ inline void pushEdge(const Edge* e, const Flow delt, const unsigned int source,
     vertex[to].inHeap = true;
   }
 }
-inline void Vertex::pushRange(const unsigned int source,
-                              const unsigned int sink, const Edge* beg,
+inline void Vertex::pushRange(const int source, const int sink, const Edge* beg,
                               const Edge* end)
 {
   for (const Edge* i = beg; i < end && exceed; ++i)
@@ -194,7 +191,7 @@ inline void Vertex::pushRange(const unsigned int source,
       }
     }
 }
-void Vertex::push(const unsigned int source, const unsigned int sink)
+void Vertex::push(const int source, const int sink)
 {
   pushRange(source, sink, cur, end);
   if (exceed) pushRange(source, sink, begin, cur);
@@ -209,14 +206,13 @@ void Vertex::init()
     cur = begin = end = nullptr;
 }
 
-Flow hlpp(const unsigned int n, const unsigned int source,
-          const unsigned int sink)
+Flow hlpp(const int n, const int source, const int sink)
 {
-  static unsigned int cnt[maxn + 10];
+  static int cnt[maxn + 10];
   if (!bfs(source, sink)) return 0;
-  std::list<unsigned int> lst;
+  std::list<int> lst;
   vertex[source].h = n;
-  for (unsigned int i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i) {
     ++cnt[vertex[i].h];
     vertex[i].init();
     if (i != source && i != sink) lst.push_back(i);
@@ -224,7 +220,7 @@ Flow hlpp(const unsigned int n, const unsigned int source,
   for (const Edge& i : vertex[source].edge)
     if (i.flow) pushEdge<true>(&i, i.flow, source, sink);
   while (!heap.empty()) {
-    const unsigned int cur = heap.top();
+    const int cur = heap.top();
     heap.pop();
     vertex[cur].inHeap = false;
     vertex[cur].push(source, sink);
@@ -246,7 +242,7 @@ Flow hlpp(const unsigned int n, const unsigned int source,
   }
   return vertex[sink].exceed;
 }
-void initGraph(const unsigned int n)
+void initGraph(const int n)
 {
   for (unsigned int i = 0; i < n; ++i)
     for (Edge& j : vertex[i].edge)

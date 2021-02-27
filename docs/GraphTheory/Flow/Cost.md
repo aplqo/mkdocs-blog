@@ -12,15 +12,14 @@
 constexpr int inf = INT_MAX;
 
 struct Edge {
-  unsigned int from, to, id;
+  int from, to, id;
   int cap, cost;
   Edge* pre;
 } ed[maxm * 2 + 1];
 Edge *head[maxn + 1], *cur[maxn + 1];
 int dis[maxn + 1], h[maxn + 1];
 
-void addEdge(const unsigned int from, const unsigned int to, const int cap,
-             const int cost)
+void addEdge(const int from, const int to, const int cap, const int cost)
 {
   static Edge* cur = ed;
   cur->from = from;
@@ -32,9 +31,9 @@ void addEdge(const unsigned int from, const unsigned int to, const int cap,
   head[from] = cur;
   ++cur;
 }
-bool dijkstra(const unsigned int s, const unsigned int t, const unsigned int n)
+bool dijkstra(const int s, const int t, const int n)
 {
-  using pair_t = pair<int, unsigned int>;
+  using pair_t = pair<int, int>;
   static bool vis[maxn + 1];
   priority_queue<pair_t, vector<pair_t>, greater<pair_t>> q;
   fill(dis, dis + 1 + n, inf);
@@ -74,14 +73,13 @@ int dfs(const int x, const int cap, const int sink)
   vis[x] = false;
   return cap - rst;
 }
-pair<int, int> flow(const unsigned int n, const unsigned int source,
-                    const unsigned int sink)
+pair<int, int> flow(const int n, const int source, const int sink)
 {
   int mxf = 0, mnc = 0;
   while (dijkstra(source, sink, n)) {
     copy(head, head + n + 1, cur);
     const int t = dfs(source, inf, sink);
-    for (unsigned int i = 1; i <= n; ++i)
+    for (int i = 1; i <= n; ++i)
       if (dis[i] != inf) h[i] += dis[i];
     mxf += t;
     mnc += h[sink] * t;
