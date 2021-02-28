@@ -4,12 +4,12 @@ $sa[i]$: 所有后缀排序后第 $i$ 小的后缀的起始位置
 
 $Rank[i]$: 从 $i$ 位置起始的后缀的排名
 
-$hight[i]$: 第 $i$ 名后缀和它前一名后缀的 $LCP$
+$height[i]$: 第 $i$ 名后缀和它前一名后缀的 $LCP$
 
 ## build
 
 ``` cpp
-unsigned int sa[maxn + 1], Rank[maxn + 1], hight[maxn + 1];
+unsigned int sa[maxn + 1], Rank[maxn + 1], height[maxn + 1];
 
 void radixSort(const size_t l, unsigned int rk[], unsigned int tp[])
 {
@@ -51,9 +51,9 @@ void buildSA(const char str[], const size_t l)
     Rank[sa[i]] = i;
   for (unsigned int i = 1, k = 0; i <= l; ++i) {
     if (k) --k;
-    while (str[i + k] == str[sa[rk[i] - 1] + k])
+    while (str[i + k] == str[sa[Rank[i] - 1] + k])
       ++k;
-    hight[rk[i]] = k;
+    height[Rank[i]] = k;
   }
 }
 ```
