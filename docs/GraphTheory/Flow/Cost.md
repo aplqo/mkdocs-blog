@@ -68,6 +68,7 @@ int dfs(const int x, const int cap, const int sink)
       rst -= t;
       i->cap -= t;
       ed[i->id ^ 1].cap += t;
+      if (!rst) break;
     }
   }
   vis[x] = false;
